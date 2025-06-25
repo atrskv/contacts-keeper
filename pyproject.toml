@@ -1,0 +1,78 @@
+[project]
+name = "contacts-keeper"
+version = "0.1.0"
+description = "A simple web app to storing contacts"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "commitizen>=4.8.3",
+]
+
+[tool.commitizen]
+name = "cz_customize"
+update_changelog_on_bump = true 
+changelog_file = "CHANGELOG.md" 
+version = "0.0.1"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:tool.commitizen.version"
+]
+allow_bump_on_tag = true
+
+[tool.commitizen.customize]
+bump_message = "chore(release): v$current_version → v$new_version"
+message_template = "{{change_type}}: {{message}}"
+example = "ci: configure GitHub Actions"
+schema = "<type>: <message>"
+schema_pattern = "^(ci|chore|feat|fix|refactor|perf|docs)(\\(.*\\))?:\\s.+"
+bump_pattern = "^(break|feat|fix|initial|first)"
+commit_parser = "^(?P<change_type>ci|chore|feat|fix|refactor|perf|docs)(\\(.*\\))?:\\s(?P<message>.+)"
+changelog_pattern = "^(ci|chore|feat|fix|refactor|perf|docs)(\\(.*\\))?:"
+change_type_order = [
+  "BREAKING CHANGE",
+  "Features",
+  "Bug Fixes",
+  "CI",
+  "Chores",
+  "Refactoring",
+  "Documentation",
+  "Performance",
+]
+
+[tool.commitizen.customize.bump_map]
+break = "MAJOR"
+feat = "MINOR"
+fix = "PATCH"
+initial = "MAJOR"
+first = "MAJOR"
+
+[tool.commitizen.customize.change_type_map]
+feat = "Features"
+fix = "Bug fixes"
+ci = "CI"
+chore = "Chores"
+docs = "Documentation"
+refactor = "Refactoring"
+perf = "Performance"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+choices = [
+  { value = "feat", name = "feat: A new feature" },
+  { value = "fix", name = "fix: A bug fix" },
+  { value = "ci", name = "ci: Continuous Integration related" },
+  { value = "chore", name = "chore: Maintenance or build changes" },
+  { value = "docs", name = "docs: Documentation updates" },
+  { value = "refactor", name = "refactor: Code restructuring" },
+  { value = "perf", name = "perf: Performance improvements" }
+]
+message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Enter the commit message"
