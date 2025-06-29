@@ -5,6 +5,7 @@ description = "A simple web app to storing contacts"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "faker>=37.4.0",
     "flask>=3.1.1",
 ]
 
