@@ -20,7 +20,6 @@ class Contact:
     tags: list[str] | None = None
     date_of_birth: date | None = None
     current_address: str | None = None
-    city: str | None = None
 
 
 class ContactsRepository:
@@ -38,7 +37,6 @@ class ContactsRepository:
         tags: list[str] | None = None,
         date_of_birth: str | None = None,
         current_address: str | None = None,
-        city: str | None = None,
     ) -> None:
         self._contacts.append(
             Contact(
@@ -50,7 +48,6 @@ class ContactsRepository:
                 tags=tags,
                 date_of_birth=str_to_date(date_of_birth),
                 current_address=current_address,
-                city=city,
             )
         )
 
@@ -67,7 +64,6 @@ class ContactsRepository:
         tags: list[str] | None = None,
         date_of_birth: str | None = None,
         current_address: str | None = None,
-        city: str | None = None,
     ) -> None:
         contact: Contact | None = self.find_by_id(id_)
 
@@ -86,8 +82,6 @@ class ContactsRepository:
                 contact.date_of_birth = str_to_date(date_of_birth)
             if current_address:
                 contact.current_address = current_address
-            if city:
-                contact.city = city
 
     def delete(self, id_: str) -> None:
         contact: Contact | None = self.find_by_id(id_)
@@ -102,6 +96,17 @@ class ContactsRepository:
                 return contact
         return None
 
+    def find_by_name_or_last_name(self, text: str) -> list[Contact]:
+        found_contacts: list[Contact] = []
+
+        for contact in self._contacts:
+            if text in contact.name:
+                found_contacts.append(contact)
+            if contact.last_name is not None and text in contact.last_name:
+                found_contacts.append(contact)
+
+        return found_contacts
+
     def generate_contacts_data(self, count: int = 3) -> None:
         for _ in range(count):
             self.create(
@@ -112,7 +117,6 @@ class ContactsRepository:
                 fake.words(nb=3),
                 date_to_str(fake.date_of_birth()),
                 fake.street_address(),
-                fake.city(),
             )
 
     @staticmethod
