@@ -1,25 +1,25 @@
+import random
 import uuid
 from dataclasses import dataclass
 from datetime import date
 
 from faker import Faker
 
-from common import date_to_str, str_to_date
-
 fake = Faker(locale='ru_RU')
 
 
 @dataclass
 class Contact:
-    id: str
-
-    name: str
+    id: str | None = None
+    name: str | None = None
     last_name: str | None = None
+    gender: str | None = None
     email: str | None = None
     phone: str | None = None
-    tags: list[str] | None = None
+    priority: str | None = None
     date_of_birth: date | None = None
     current_address: str | None = None
+    notes: str | None = None
 
 
 class ContactsRepository:
@@ -28,60 +28,50 @@ class ContactsRepository:
     def __init__(self, contacts: list[Contact] | None = None) -> None:
         self._contacts = contacts or []
 
-    def create(
-        self,
-        name: str,
-        last_name: str | None = None,
-        email: str | None = None,
-        phone: str | None = None,
-        tags: list[str] | None = None,
-        date_of_birth: str | None = None,
-        current_address: str | None = None,
-    ) -> None:
-        self._contacts.append(
-            Contact(
-                id=ContactsRepository._generate_id(),
-                name=name,
-                last_name=last_name,
-                email=email,
-                phone=phone,
-                tags=tags,
-                date_of_birth=str_to_date(date_of_birth),
-                current_address=current_address,
-            )
-        )
+    def create(self, contact: Contact) -> None:
+        if contact.id is None:
+            contact.id = self._generate_id()
+        self._contacts.append(contact)
 
     def read(self) -> list[Contact]:
         return self._contacts
 
     def update(
         self,
-        id_: str,
+        id: str,
         name: str | None = None,
         last_name: str | None = None,
+        gender: str | None = None,
         email: str | None = None,
         phone: str | None = None,
-        tags: list[str] | None = None,
-        date_of_birth: str | None = None,
+        priority: str | None = None,
+        date_of_birth: date | None = None,
         current_address: str | None = None,
+        notes: str | None = None,
     ) -> None:
-        contact: Contact | None = self.find_by_id(id_)
+        contact: Contact | None = self.find_by_id(id)
 
-        if contact:
-            if name:
-                contact.name = name
-            if last_name:
-                contact.last_name = last_name
-            if email:
-                contact.email = email
-            if phone:
-                contact.phone = phone
-            if tags:
-                contact.tags = tags
-            if date_of_birth:
-                contact.date_of_birth = str_to_date(date_of_birth)
-            if current_address:
-                contact.current_address = current_address
+        if contact is None:
+            return None
+
+        if name is not None:
+            contact.name = name
+        if last_name is not None:
+            contact.last_name = last_name
+        if gender is not None:
+            contact.gender = gender
+        if email is not None:
+            contact.email = email
+        if phone is not None:
+            contact.phone = phone
+        if priority is not None:
+            contact.priority = priority
+        if date_of_birth is not None:
+            contact.date_of_birth = date_of_birth
+        if current_address is not None:
+            contact.current_address = current_address
+        if notes is not None:
+            contact.notes = notes
 
     def delete(self, id_: str) -> None:
         contact: Contact | None = self.find_by_id(id_)
@@ -96,13 +86,13 @@ class ContactsRepository:
                 return contact
         return None
 
-    def find_by_name_or_last_name(self, text: str) -> list[Contact]:
+    def find_by_name_or_last_name(self, query: str) -> list[Contact]:
         found_contacts: list[Contact] = []
 
         for contact in self._contacts:
-            if text in contact.name:
+            if contact.name is not None and query in contact.name:
                 found_contacts.append(contact)
-            if contact.last_name is not None and text in contact.last_name:
+            if contact.last_name is not None and query in contact.last_name:
                 found_contacts.append(contact)
 
         return found_contacts
@@ -110,13 +100,18 @@ class ContactsRepository:
     def generate_contacts_data(self, count: int = 3) -> None:
         for _ in range(count):
             self.create(
-                fake.first_name(),
-                fake.last_name(),
-                fake.email(),
-                fake.phone_number(),
-                fake.words(nb=3),
-                date_to_str(fake.date_of_birth()),
-                fake.street_address(),
+                Contact(
+                    ContactsRepository._generate_id(),
+                    fake.first_name(),
+                    fake.last_name(),
+                    random.choice(['Мужчина', 'Женщина', '...']),
+                    fake.email(),
+                    fake.phone_number(),
+                    random.choice(['Экстренной важности', 'Обычный']),
+                    fake.date_of_birth(),
+                    fake.street_address(),
+                    fake.text(),
+                )
             )
 
     @staticmethod
