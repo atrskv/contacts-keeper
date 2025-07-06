@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block title %}Редактировать контакт{% endblock %}
+
+{% block content %}
+
+<h1>Редактировать контакт</h1>
+
+<form action="{{ url_for('contacts_patch', id=contact.id) }}" method="post">
+    <div>
+        <label>
+            Имя*
+            <input type="text" name="first_name" value="{{ contact.first_name|default('', true) }}">
+        </label>
+
+        {% if errors.first_name %}
+
+        <div class="error">{{ errors.first_name }}</div>
+
+        {% endif %}
+
+    </div>
+    <div>
+        <label>
+            Фамилия
+            <input type="text" name="last_name" value="{{ contact.last_name|default('', true) }}">
+        </label>
+
+        {% if errors.last_name %}
+
+        <div class="error">{{ errors.last_name }}</div>
+
+        {% endif %}
+
+    </div>
+    <div>
+        <label>
+            Телефон
+            <input type="tel" name="phone" value="{{ contact.phone|default('', true) }}">
+        </label>
+
+        {% if errors.phone %}
+
+        <div class="error">{{ errors.phone }}</div>
+
+        {% endif %}
+
+    </div>
+    <div>
+        <label>
+            Эл. почта
+            <input type="email" name="email" value="{{ contact.email|default('') }}">
+        </label>
+        {% if errors.email %}
+        <div class="error">{{ errors.email }}</div>
+        {% endif %}
+    </div>
+
+    {% set gender_name = contact.gender.name if contact.gender else 'other' %}
+
+    <div>
+        <label>Пол</label><br>
+        <label>
+            <input type="radio" name="gender" value="male" {% if gender_name == 'male' %}checked{% endif %}>
+            Мужской
+        </label>
+        <label>
+            <input type="radio" name="gender" value="female" {% if gender_name == 'female' %}checked{% endif %}>
+            Женский
+        </label>
+        <label>
+            <input type="radio" name="gender" value="other" {% if gender_name == 'other' %}checked{% endif %}>
+            ...
+        </label>
+
+        {% if errors.gender %}
+
+        <div class="error">{{ errors.gender }}</div>
+
+        {% endif %}
+
+    </div>
+
+    {% set date_of_birth = contact.date_of_birth.isoformat() if contact.date_of_birth else '' %}
+
+    <div>
+        <label>
+            Дата рождения
+            <input type="date" name="date_of_birth" value="{{ date_of_birth }}">
+        </label>
+
+        {% if errors.date_of_birth %}
+
+        <div class="error">{{ errors.date_of_birth }}</div>
+
+        {% endif %}
+
+    </div>
+
+    {% set priority_name = contact.priority.name if contact.priority else 'regular' %}
+
+    <div>
+        <label>Приоритет</label><br>
+        <label>
+            <input type="radio" name="priority" value="regular" {% if priority_name == 'regular' %}checked{% endif %}>
+            Обычный
+        </label>
+        <label>
+            <input type="radio" name="priority" value="high" {% if priority_name == 'high' %}checked{% endif %}>
+            Особой важности
+        </label>
+
+        {% if errors.priority %}
+
+        <div class="error">{{ errors.priority }}</div>
+
+        {% endif %}
+
+    </div>
+
+    {% set category_name = contact.category.name if contact.category else 'not_selected' %}
+
+    <div>
+        <label for="category">Категория</label>
+        <select id="category" name="category">
+            <option value="not_selected" {% if category_name == 'not_selected' %}selected{% endif %}>Не выбрана</option>
+            <option value="friends" {% if category_name == 'friends' %}selected{% endif %}>Друзья</option>
+            <option value="family" {% if category_name == 'family' %}selected{% endif %}>Семья</option>
+            <option value="work" {% if category_name == 'work' %}selected{% endif %}>Работа</option>
+            <option value="clients" {% if category_name == 'clients' %}selected{% endif %}>Клиенты</option>
+        </select>
+
+        {% if errors.category %}
+
+        <div class="error">{{ errors.category }}</div>
+
+        {% endif %}
+
+    </div>
+
+    {% if contact.channels %}
+
+    {% set channel_names = [] %}
+
+    {% for ch in contact.channels %}
+
+    {% set _ = channel_names.append(ch.name) %}
+
+    {% endfor %}
+
+    {% else %}
+
+    {% set channel_names = [] %}
+
+    {% endif %}
+
+    <div>
+        <label>Каналы связи</label><br>
+        <label>
+            <input type="checkbox" name="channels" value="can_call" {% if "can_call" in channel_names %}checked{% endif %}>
+            Можно звонить
+        </label><br>
+        <label>
+            <input type="checkbox" name="channels" value="can_message" {% if 'can_message' in channel_names %}checked{% endif %}>
+            Можно писать сообщения
+        </label><br>
+        <label>
+            <input type="checkbox" name="channels" value="email_preferred" {% if 'email_preferred' in channel_names %}checked{% endif %}>
+            Предпочтительно по эл. почте
+        </label><br>
+
+        {% if errors.channels %}
+
+        <div class="error">{{ errors.channels }}</div>
+
+        {% endif %}
+
+    </div>
+    <div>
+        <label>
+            Адрес
+            <textarea name="current_address">{{ contact.current_address|default('', true) }}</textarea>
+        </label>
+
+        {% if errors.current_address %}
+
+        <div class="error">{{ errors.current_address }}</div>
+
+        {% endif %}
+
+    </div>
+    <br>
+    <div>
+        <button type="submit">Сохранить изменения</button>
+    </div>
+</form>
+
+{% endblock %}

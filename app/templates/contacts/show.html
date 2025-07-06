@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block title %}Просмотр контакта{% endblock %}
+
+{% block content %}
+
+<h2>{{ contact.first_name|default('', true) }} {{ contact.last_name|default('', true) }}</h2>
+<div class="contact-field">
+    <span class="label">Телефон</span>
+    <span class="value">{{ contact.phone|default('Не указан', true) }}</span>
+</div>
+<div class="contact-field">
+    <span class="label">Эл. почта</span>
+    <span class="value">{{ contact.email|default('Не указана', true) }}</span>
+</div>
+
+{% set gender = contact.gender|default('...', true) %}
+
+<div class="contact-field">
+    <span class="label">Пол</span>
+    <span class="value">
+
+        {{ gender.value }}
+
+    </span>
+</div>
+<div class="contact-field">
+    <span class="label">Дата рождения</span>
+    <span class="value">{{ date_to_str(contact.date_of_birth)|default('Не указана', true) }}</span>
+</div>
+
+{% set priority = contact.priority|default('not_selected', true) %}
+
+<div class="contact-field">
+    <span class="label">Приоритет</span>
+    <span class="value">
+
+        {{ priority.value }}
+
+    </span>
+</div>
+
+{% set category = contact.category|default('not_selected', true) %}
+
+<div class="contact-field">
+    <span class="label">Категория</span>
+    <span class="value">
+
+        {{ category.value }}
+
+    </span>
+</div>
+
+{% set channels = contact.channels|default([], true) %}
+
+<div class="contact-field">
+    <span class="label">Каналы связи</span>
+    <span class="value">
+
+        {% if channels %}
+
+        {% for ch in channels %}
+
+        {{ ch.value }}{% if not loop.last %}, {% endif %}
+
+        {% endfor %}
+
+        {% else %}
+
+        Нет каналов связи
+
+        {% endif %}
+
+    </span>
+</div>
+<div class="contact-field">
+    <span class="label">Адрес</span>
+    <span class="value"> {{ contact.current_address|default('Не указан', true) }}
+    </span>
+</div>
+<br>
+<div class="edit-contact-form">
+    <button type="submit" form="editContactForm">Редактировать</button>
+</div>
+<form id="editContactForm" action="{{ url_for('contacts_edit', id=contact.id) }}" method="get"></form>
+<br>
+<form action="{{ url_for('contacts_delete', id=contact.id) }}" method="post" onsubmit="return confirm('Вы уверены что хотите удалить пользователя? Это действие нельзя отменить.');">
+    <input type="submit" value="Удалить">
+</form>
+
+{% endblock %}

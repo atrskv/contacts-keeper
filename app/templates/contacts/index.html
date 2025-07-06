@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+
+<div class="flashes">
+
+    {% for category, message in messages %}
+
+    <span class="{{ category }}">{{ message }}</span>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+<h2>Контакты</h2>
+<div class="search-form">
+    <form action="{{ url_for('contacts_index') }}" method="get">
+        <label for="search-input">Поиск</label>
+        <input type="search" id="search-input" name="query" value="{{ search }}">
+        <button type="submit" name="action" value="search">Найти</button>
+        <button type="submit" name="action" value="reset">Сбросить</button>
+    </form>
+</div>
+</div>
+<br>
+<div class="add-button">
+    <form action="{{ url_for('contacts_new') }}" method="get">
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<br>
+<div class="contacts-list">
+    {% for contact in contacts %}
+    <div class="contact-item">
+        <a href="{{ url_for('contacts_show', id=contact.id) }}">
+            <span class="contact-name">{{ contact.first_name }} {{ contact.last_name }}</span>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
