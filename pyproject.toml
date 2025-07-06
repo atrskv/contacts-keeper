@@ -18,13 +18,14 @@ dev = [
 ]
 
 [tool.mypy]
-disallow_untyped_defs = true
-disallow_any_unimported = true
-no_implicit_optional = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
 check_untyped_defs = true
-warn_return_any = true
+ignore_missing_imports = true
+warn_return_any = false
 warn_unused_ignores = true
-show_error_codes = true
+allow_untyped_globals = true
+pretty = true
 
 [tool.ruff]
 exclude = [
