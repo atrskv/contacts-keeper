@@ -4,45 +4,89 @@
 
 {% block content %}
 
-{% if messages %}
+<h2 class="mb-3">Контакты</h2>
 
-<div class="flashes">
-
-    {% for category, message in messages %}
-
-    <span class="{{ category }}">{{ message }}</span>
-
-    {% endfor %}
-
-</div>
-
-{% endif %}
-
-<h2>Контакты</h2>
-<div class="search-form">
+<div class="mb-4 search-form">
     <form action="{{ url_for('contacts_index') }}" method="get">
-        <label for="search-input">Поиск</label>
-        <input type="search" id="search-input" name="query" value="{{ search }}">
-        <button type="submit" name="action" value="search">Найти</button>
-        <button type="submit" name="action" value="reset">Сбросить</button>
+        <div class="input-group mb-3">
+            <input type="search" id="search-input" name="query" value="{{ search }}" class="form-control" placeholder="{{ search_placeholder }}" aria-label="Search">
+            <button type="submit" name="action" value="search" class="btn bg-white text-dark border border-dark">
+                Найти
+            </button>
+            <button type="submit" name="action" value="reset" class="btn bg-white text-dark border border-dark">
+                Сбросить
+            </button>
+            <a href="{{ url_for('contacts_new') }}" class="btn bg-white text-dark border border-dark">
+                Добавить
+            </a>
+        </div>
     </form>
 </div>
-</div>
-<br>
-<div class="add-button">
-    <form action="{{ url_for('contacts_new') }}" method="get">
-        <button type="submit">Добавить</button>
-    </form>
-</div>
-<br>
-<div class="contacts-list">
+
+<div class="contacts-list text-center">
+    {% if contacts %}
     {% for contact in contacts %}
-    <div class="contact-item">
-        <a href="{{ url_for('contacts_show', id=contact.id) }}">
-            <span class="contact-name">{{ contact.first_name }} {{ contact.last_name }}</span>
+    <div class="contact-item my-2">
+        <a href="{{ url_for('contacts_show', id=contact.id) }}" class="fs-4 fw-semibold text-decoration-none text-dark">
+            {{ contact.last_name }} {{ contact.first_name }}
         </a>
     </div>
     {% endfor %}
-</div>
 
+    {% if pages > 1 %}
+    <nav>
+        <ul class="pagination justify-content-center mt-4">
+            {% if page > 1 %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="{{ url_for('contacts_index', page=page-1, query=search) }}">
+                    Назад
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Назад</span></li>
+            {% endif %}
+
+            {% set start_page = [1, page-2]|max %}
+            {% set end_page = [pages, start_page+4]|min %}
+            {% if (end_page - start_page) < 4 %}
+            {% set start_page = [1, end_page-4]|max %}
+            {% endif %}
+
+            {% for p in range(start_page, end_page+1) %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+                <a class="page-link {% if p == page %}text-dark bg-white border-dark{% else %}text-dark{% endif %}" href="{{ url_for('contacts_index', page=p, query=search) }}">
+                    {{ p }}
+                </a>
+            </li>
+            {% endfor %}
+
+            {% if page < pages %}
+            <li class="page-item">
+                <a class="page-link text-dark" href="{{ url_for('contacts_index', page=page+1, query=search) }}">
+                    Вперед
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Вперед</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="contact-item my-2">
+        <h4>К сожалению, мы не нашли «{{ search }}»</h4>
+        <h4>(ಡ‸ಡ)</h4>
+    </div>
+    {% endif %}
+</div>
+<div class="flashes text-center mt-3" style="min-height:40px; ">
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-success success py-1 px-2 d-inline-block small mb-2 text-white fade show" role="alert" style="max-width: 300px;">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
