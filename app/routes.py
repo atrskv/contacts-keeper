@@ -25,7 +25,7 @@ def init_app(app: Flask):
     ...
 
     @app.get('/')
-    @app.get('/contacts')
+    @app.get('/contacts/')
     def contacts_index():
         action = request.args.get('action')
         query = request.args.get('query', '')
@@ -77,7 +77,7 @@ def init_app(app: Flask):
             pages=pages,
         )
 
-    @app.route('/contacts/<id>')
+    @app.route('/contacts/<id>/')
     def contacts_show(id: str):
         contact = repo.find_by_id(id)
         messages = get_flashed_messages(with_categories=True)
@@ -92,7 +92,7 @@ def init_app(app: Flask):
             messages=messages,
         )
 
-    @app.route('/contacts/random')
+    @app.route('/contacts/random/')
     def contacts_random_show():
         contact = random.choice(repo.read())
 
@@ -100,7 +100,7 @@ def init_app(app: Flask):
             'contacts/show.html', contact=contact, date_to_str=date_to_str
         )
 
-    @app.route('/contacts/new')
+    @app.route('/contacts/new/')
     def contacts_new():
         contact = Contact.empty()
 
@@ -108,7 +108,7 @@ def init_app(app: Flask):
             'contacts/new.html', contact=contact, errors={}, form_data={}
         )
 
-    @app.post('/contacts')
+    @app.post('/contacts/')
     def contacts_post():
         form_data = request.form
         validator = ContactValidator(form_data)
@@ -128,7 +128,7 @@ def init_app(app: Flask):
 
         return redirect(url_for('contacts_index'))
 
-    @app.route('/contacts/<id>/edit')
+    @app.route('/contacts/<id>/edit/')
     def contacts_edit(id: str):
         contact = repo.find_by_id(id)
 
@@ -141,7 +141,7 @@ def init_app(app: Flask):
             errors={},
         )
 
-    @app.post('/contacts/<id>')
+    @app.post('/contacts/<id>/')
     def contacts_patch(id: str):
         form_data = request.form
         validator = ContactValidator(form_data)
@@ -180,7 +180,7 @@ def init_app(app: Flask):
 
         return redirect(url_for('contacts_show', id=id))
 
-    @app.post('/contacts/<id>/delete')
+    @app.post('/contacts/<id>/delete/')
     def contacts_delete(id: str):
         repo.delete(id)
 
