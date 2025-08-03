@@ -3,7 +3,6 @@ from flask.cli import load_dotenv
 import os
 from app import routes
 
-
 _ = load_dotenv()
 
 

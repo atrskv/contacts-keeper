@@ -2,6 +2,7 @@
 import random
 from datetime import datetime
 
+import psycopg2
 from flask import (
     Flask,
     abort,
@@ -17,8 +18,24 @@ from app.common import date_to_str
 from app.data.repository import Contact, ContactsRepository
 from app.validators import ContactValidator
 
-repo = ContactsRepository()
-repo.generate_contacts_data(1000)
+DB_HOST = 'localhost'
+DB_NAME = 'contacts'
+DB_USER = 'contacts_owner'
+DB_PASS = 'contacts'
+
+
+def get_db_connection():
+    conn = psycopg2.connect(
+        host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASS
+    )
+    return conn
+
+
+conn = get_db_connection()
+
+
+repo = ContactsRepository(conn)
+repo.generate_contacts_data(100)
 
 
 def init_app(app: Flask):
