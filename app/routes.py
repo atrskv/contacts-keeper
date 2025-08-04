@@ -1,8 +1,10 @@
 # pyright: reportUnusedFunction=false
+import os
 import random
 from datetime import datetime
 
 import psycopg2
+from dotenv import load_dotenv
 from flask import (
     Flask,
     abort,
@@ -18,10 +20,12 @@ from app.common import date_to_str
 from app.data.repository import Contact, ContactsRepository
 from app.validators import ContactValidator
 
-DB_HOST = 'localhost'
-DB_NAME = 'contacts'
-DB_USER = 'contacts_owner'
-DB_PASS = 'contacts'
+_ = load_dotenv()
+
+DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASS = os.getenv('DB_PASS')
 
 
 def get_db_connection():

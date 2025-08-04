@@ -131,7 +131,7 @@ class ContactsRepository:
 
     @staticmethod
     def _generate_id() -> str:
-        return str(uuid.uuid4())[:4]
+        return str(uuid.uuid4())
 
     def read(self) -> list[Contact]:
         with self.conn.cursor() as cur:
