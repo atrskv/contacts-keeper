@@ -3,7 +3,7 @@ name = "contacts-keeper"
 version = "0.1.0"
 description = "A simple web app to storing contacts"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
     "faker>=37.4.0",
     "flask>=3.1.1",
