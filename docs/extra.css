@@ -1,0 +1,10 @@
+.md-header {
+    background-color: #212529 !important;
+}
+
+.md-nav__link:hover,
+.md-nav__link:focus,
+.md-nav__link--active {
+    color: #212529 !important;
+    font-weight: bold;
+}

@@ -1,0 +1,43 @@
+docs_dir: docs
+
+site_name: Contacts Keeper 
+site_url: http://localhost:8081
+
+theme:
+  name: material
+  language: ru
+  font:
+    text: Fira Code
+    code: Fira Code
+
+repo_url: https://github.com/atrskv/contacts-keeper
+repo_name: Contacts Keeper
+
+nav:
+  - Описание: index.md
+  - Cхемы:
+      - Карта функциональных возможностей: schemes/feature_tree.md
+      - Диаграмма состояний и переходов: schemes/state_and_transition.md
+  - Маршруты: routes.md
+  - История изменений: changelog.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra:
+  social:
+    - icon: material/web
+      link: https://atrskv.github.io/
+    - icon: fontawesome/brands/github
+      link: https://github.com/atrskv/contacts-keeper
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/torsukov
+
+extra_css:
+  - extra.css
