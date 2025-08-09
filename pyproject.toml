@@ -61,7 +61,7 @@ line-ending = "auto"
 name = "cz_customize"
 update_changelog_on_bump = true 
 changelog_file = "CHANGELOG.md" 
-version = "0.0.1"
+version = "1.0.0"
 tag_format = "v$version"
 version_files = [
     "pyproject.toml:tool.commitizen.version"
@@ -73,10 +73,10 @@ bump_message = "chore(release): v$current_version → v$new_version"
 message_template = "{{change_type}}: {{message}}"
 example = "ci: configure GitHub Actions"
 schema = "<type>: <message>"
-schema_pattern = "^(ci|chore|feat|fix|refactor|perf|docs)(\\(.*\\))?:\\s.+"
+schema_pattern = "^(ci|chore|feat|fix|refactor|bump|perf|docs)(\\(.*\\))?:\\s.+"
 bump_pattern = "^(break|feat|fix|initial|first)"
-commit_parser = "^(?P<change_type>ci|chore|feat|fix|refactor|perf|docs)(\\(.*\\))?:\\s(?P<message>.+)"
-changelog_pattern = "^(ci|chore|feat|fix|refactor|perf|docs)(\\(.*\\))?:"
+commit_parser = "^(?P<change_type>ci|chore|feat|fix|bump|refactor|perf|docs)(\\(.*\\))?:\\s(?P<message>.+)"
+changelog_pattern = "^(ci|chore|feat|fix|refactor|bump|perf|docs)(\\(.*\\))?:"
 change_type_order = [
   "BREAKING CHANGE",
   "Features",
