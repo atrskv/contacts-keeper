@@ -32,11 +32,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.docs
-    working_dir: /docs
+    working_dir: /app
     volumes:
-      - ./:/docs
-      - ./CHANGELOG.md:/docs/changelog.md
-      - ./mkdocs.yml:/docs/mkdocs.yml 
+      - ./:/app
+      - ./CHANGELOG.md:/app/docs/changelog.md
     ports:
       - "8081:8000"
 
