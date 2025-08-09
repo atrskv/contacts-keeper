@@ -1,0 +1,8 @@
+services:
+  db:
+    env_file:
+      - .env.prod
+
+  app:
+    env_file:
+      - .env.prod

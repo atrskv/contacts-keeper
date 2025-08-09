@@ -1,0 +1,10 @@
+services:
+  db:
+    env_file:
+      - .env.dev
+
+  app:
+    volumes:
+      - ./:/app
+    env_file:
+      - .env.dev
