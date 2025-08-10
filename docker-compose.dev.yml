@@ -5,6 +5,10 @@ services:
 
   app:
     volumes:
-      - ./:/app
+      - ./app:/app/app          
+      - ./common.py:/app/common.py  
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./uv.lock:/app/uv.lock
+      - ./entrypoint.sh:/app/entrypoint.sh
     env_file:
       - .env.dev
