@@ -14,7 +14,7 @@
                     <form action="{{ url_for('contacts_post') }}" method="post">
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Имя<span class="text-danger">*</span></dt>
-                            <dd class="col-7">
+                            <dd class="col-7" id="first_name">
                                 <input type="text" class="form-control{% if errors.first_name %} is-invalid{% endif %}" name="first_name" value="{{ form_data.first_name | default('', true) }}">
                                 {% if errors.first_name %}
                                 <div class="invalid-feedback">{{ errors.first_name }}</div>
@@ -25,7 +25,7 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Фамилия</dt>
                             <dd class="col-7">
-                                <input type="text" class="form-control{% if errors.last_name %} is-invalid{% endif %}" name="last_name" value="{{ form_data.last_name | default('', true) }}">
+                                <input type="text" id="last_name" class="form-control{% if errors.last_name %} is-invalid{% endif %}" name="last_name" value="{{ form_data.last_name | default('', true) }}">
                                 {% if errors.last_name %}
                                 <div class="invalid-feedback">{{ errors.last_name }}</div>
                                 {% endif %}
@@ -35,7 +35,7 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Телефон</dt>
                             <dd class="col-7">
-                                <input type="tel" class="form-control{% if errors.phone %} is-invalid{% endif %}" name="phone" value="{{ form_data.phone | default('', true) }}">
+                                <input type="tel" id="phone" class="form-control{% if errors.phone %} is-invalid{% endif %}" name="phone" value="{{ form_data.phone | default('', true) }}">
                                 {% if errors.phone %}
                                 <div class="invalid-feedback">{{ errors.phone }}</div>
                                 {% endif %}
@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark">Эл. почта</dt>
+                            <dt class="col-5 text-dark" id="email">Эл. почта</dt>
                             <dd class="col-7">
                                 <input type="email" class="form-control{% if errors.email %} is-invalid{% endif %}" name="email" value="{{ form_data.email | default('', true) }}">
                                 {% if errors.email %}
@@ -54,7 +54,7 @@
 
                         {% set gender = form_data.gender | default('other', true) %}
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark">Пол</dt>
+                            <dt class="col-5 text-dark" id="gender">Пол</dt>
                             <dd class="col-7">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="gender" id="gender_male" value="male" {% if gender == 'male' %}checked{% endif %}>
@@ -74,7 +74,7 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="date_of_birth">
                             <dt class="col-5 text-dark">Дата рождения</dt>
                             <dd class="col-7">
                                 <input type="date" class="form-control{% if errors.date_of_birth %} is-invalid{% endif %}" name="date_of_birth" value="{{ form_data.date_of_birth | default('', true) }}">
@@ -85,7 +85,7 @@
                         </div>
 
                         {% set priority = form_data.priority | default('regular', true) %}
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="priority">
                             <dt class="col-5 text-dark">Приоритет</dt>
                             <dd class="col-7">
                                 <div class="form-check">
@@ -103,7 +103,7 @@
                         </div>
 
                         {% set category = form_data.category | default('not_selected', true) %}
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="category">
                             <dt class="col-5 text-dark">Категория</dt>
                             <dd class="col-7">
                                 <select class="form-select{% if errors.category %} is-invalid{% endif %}" name="category">
@@ -126,7 +126,7 @@
                         {% endif %}
 
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark">Каналы связи</dt>
+                            <dt class="col-5 text-dark" id="channels">Каналы связи</dt>
                             <dd class="col-7">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="channels" value="can_call" id="can_call" {% if 'can_call' in channels %}checked{% endif %}>
@@ -146,7 +146,7 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="current_address">
                             <dt class="col-5 text-dark">Адрес</dt>
                             <dd class="col-7">
                                 <textarea class="form-control{% if errors.current_address %} is-invalid{% endif %}" name="current_address" rows="3">{{ form_data.current_address | default('', true) }}</textarea>
@@ -157,7 +157,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn bg-white text-dark border border-dark">
+                            <button type="submit" id="add" class="btn bg-white text-dark border border-dark">
                                 Добавить
                             </button>
                         </div>

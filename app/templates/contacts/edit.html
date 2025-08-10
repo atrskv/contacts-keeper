@@ -20,7 +20,7 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Имя<span class="text-danger">*</span></dt>
                             <dd class="col-7">
-                                <input type="text" class="form-control{% if errors.first_name %} is-invalid{% endif %}" name="first_name" value="{{ form_data.get('first_name') or contact.first_name or '' }}">
+                                <input type="text" id="first_name" class="form-control{% if errors.first_name %} is-invalid{% endif %}" name="first_name" value="{{ form_data.get('first_name') or contact.first_name or '' }}">
                                 {% if errors.first_name %}
                                 <div class=" invalid-feedback">{{ errors.first_name }}
                                 </div>
@@ -31,7 +31,7 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Фамилия</dt>
                             <dd class="col-7">
-                                <input type="text" class="form-control{% if errors.last_name %} is-invalid{% endif %}" name="last_name" value="{{ form_data.get('last_name') or contact.last_name or '' }}">
+                                <input type="text" id="last_name" class="form-control{% if errors.last_name %} is-invalid{% endif %}" name="last_name" value="{{ form_data.get('last_name') or contact.last_name or '' }}">
                                 {% if errors.last_name %}
                                 <div class="invalid-feedback">{{ errors.last_name }}</div>
                                 {% endif %}
@@ -41,7 +41,7 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Телефон</dt>
                             <dd class="col-7">
-                                <input type="tel" class="form-control{% if errors.phone %} is-invalid{% endif %}" name="phone" value="{{ form_data.get('phone') or contact.phone or '' }}">
+                                <input type="tel" id="phone" class="form-control{% if errors.phone %} is-invalid{% endif %}" name="phone" value="{{ form_data.get('phone') or contact.phone or '' }}">
                                 {% if errors.phone %}
                                 <div class="invalid-feedback">{{ errors.phone }}</div>
                                 {% endif %}
@@ -51,14 +51,14 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Эл. почта</dt>
                             <dd class="col-7">
-                                <input type="email" class="form-control{% if errors.email %} is-invalid{% endif %}" name="email" value="{{ form_data.get('email') or contact.email or '' }}">
+                                <input type="email" id="email" class="form-control{% if errors.email %} is-invalid{% endif %}" name="email" value="{{ form_data.get('email') or contact.email or '' }}">
                                 {% if errors.email %}
                                 <div class="invalid-feedback">{{ errors.email }}</div>
                                 {% endif %}
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="gender">
                             <dt class="col-5 text-dark">Пол</dt>
                             <dd class="col-7">
                                 {% set gender_name = contact.gender.name if contact.gender else 'other' %}
@@ -80,7 +80,7 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="date_of_birth">
                             <dt class="col-5 text-dark">Дата рождения</dt>
                             <dd class="col-7">
                                 {% set date_of_birth = contact.date_of_birth.isoformat() if contact.date_of_birth else '' %}
@@ -91,7 +91,7 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="priority">
                             <dt class="col-5 text-dark">Приоритет</dt>
                             <dd class="col-7">
                                 {% set priority_name = contact.priority.name if contact.priority else 'regular' %}
@@ -109,7 +109,7 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="category">
                             <dt class="col-5 text-dark">Категория</dt>
                             <dd class="col-7">
                                 {% set category_name = contact.category.name if contact.category else 'not_selected' %}
@@ -136,7 +136,7 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="channels">
                             <dt class="col-5 text-dark">Каналы связи</dt>
                             <dd class="col-7">
                                 {% set channel_names = contact.channels | map(attribute='name') | list if contact.channels else [] %}
@@ -161,7 +161,7 @@
                         <div class="row mb-3">
                             <dt class="col-5 text-dark">Адрес</dt>
                             <dd class="col-7">
-                                <textarea name="current_address" class="form-control">{{ contact.current_address|default('', true) }}</textarea>
+                                <textarea name="current_address" id="current_address" class="form-control">{{ contact.current_address|default('', true) }}</textarea>
                                 {% if errors.current_address %}
                                 <div class="invalid-feedback">{{ errors.current_address }}</div>
                                 {% endif %}

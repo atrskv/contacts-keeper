@@ -10,13 +10,13 @@
     <form action="{{ url_for('contacts_index') }}" method="get">
         <div class="input-group mb-3">
             <input type="search" id="search-input" name="query" value="{{ search }}" class="form-control" placeholder="{{ search_placeholder }}" aria-label="Search">
-            <button type="submit" name="action" value="search" class="btn bg-white text-dark border border-dark">
+            <button type="submit" name="action" id="search_button" value="search" class="btn bg-white text-dark border border-dark">
                 Найти
             </button>
-            <button type="submit" name="action" value="reset" class="btn bg-white text-dark border border-dark">
+            <button type="submit" name="action" id="reset_button" value="reset" class="btn bg-white text-dark border border-dark">
                 Сбросить
             </button>
-            <a href="{{ url_for('contacts_new') }}" class="btn bg-white text-dark border border-dark">
+            <a href="{{ url_for('contacts_new') }}" id="add_button" class="btn bg-white text-dark border border-dark">
                 Добавить
             </a>
         </div>
@@ -27,7 +27,7 @@
     {% if contacts %}
     {% for contact in contacts %}
     <div class="contact-item my-2">
-        <a href="{{ url_for('contacts_show', id=contact.id) }}" class="fs-4 fw-semibold text-decoration-none text-dark">
+        <a href="{{ url_for('contacts_show', id=contact.id) }}" id="title" class="fs-4 fw-semibold text-decoration-none text-dark">
             {{ contact.last_name }} {{ contact.first_name }}
         </a>
     </div>
@@ -38,12 +38,12 @@
         <ul class="pagination justify-content-center mt-4">
             {% if page > 1 %}
             <li class="page-item">
-                <a class="page-link text-dark" href="{{ url_for('contacts_index', page=page-1, query=search) }}">
+                <a class="page-link text-dark" id="back" href="{{ url_for('contacts_index', page=page-1, query=search) }}">
                     Назад
                 </a>
             </li>
             {% else %}
-            <li class="page-item disabled"><span class="page-link">Назад</span></li>
+            <li class="page-item disabled" id="back"><span class=" page-link">Назад</span></li>
             {% endif %}
 
             {% set start_page = [1, page-2]|max %}
@@ -62,19 +62,19 @@
 
             {% if page < pages %}
             <li class="page-item">
-                <a class="page-link text-dark" href="{{ url_for('contacts_index', page=page+1, query=search) }}">
+                <a class="page-link text-dark" id="next" href="{{ url_for('contacts_index', page=page+1, query=search) }}">
                     Вперед
                 </a>
             </li>
             {% else %}
-            <li class="page-item disabled"><span class="page-link">Вперед</span></li>
+            <li class="page-item disabled" id="next"><span class="page-link">Вперед</span></li>
             {% endif %}
         </ul>
     </nav>
     {% endif %}
 
     {% else %}
-    <div class="contact-item my-2">
+    <div class="contact-item my-2" id="result">
         <h4>К сожалению, мы не нашли «{{ search }}»</h4>
         <h4>(ಡ‸ಡ)</h4>
     </div>

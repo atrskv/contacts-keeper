@@ -21,32 +21,32 @@
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-5 text-dark">Телефон</dt>
-                        <dd class="col-7 text-dark">{{ contact.phone|default('Не указан', true) }}</dd>
+                        <dd class="col-7 text-dark" id="phone">{{ contact.phone|default('Не указан', true) }}</dd>
 
                         <dt class="col-5 text-dark">Эл. почта</dt>
-                        <dd class="col-7 text-dark">{{ contact.email|default('Не указана', true) }}</dd>
+                        <dd class="col-7 text-dark" id="email">{{ contact.email|default('Не указана', true) }}</dd>
 
                         <dt class="col-5 text-dark">Пол</dt>
-                        <dd class="col-7 text-dark">
+                        <dd class="col-7 text-dark" id="gender">
                             {{ contact.gender.value if contact.gender else '...' }}
                         </dd>
 
                         <dt class="col-5 text-dark">Дата рождения</dt>
-                        <dd class="col-7 text-dark">
+                        <dd class="col-7 text-dark" id="date_of_birth">
                             {{ date_to_str(contact.date_of_birth)|default('Не указана', true) }}
                         </dd>
 
                         <dt class="col-5 text-dark">Приоритет</dt>
-                        <dd class="col-7 text-dark">
+                        <dd class="col-7 text-dark" id="priority">
                             {{ contact.priority.value if contact.priority else 'Обычный' }}
                         </dd>
 
                         <dt class="col-5 text-dark">Категория</dt>
-                        <dd class="col-7 text-dark">
+                        <dd class="col-7 text-dark" id="category">
                             {{ contact.category.value if contact.category else 'Не выбрана' }}
                         </dd>
 
-                        <dt class="col-5 text-dark">Каналы связи</dt>
+                        <dt class="col-5 text-dark" id="channels">Каналы связи</dt>
                         <dd class="col-7 text-dark">
                             {% set channels = contact.channels|default([], true) %}
                             {% if channels %}
@@ -58,7 +58,7 @@
                             {% endif %}
                         </dd>
 
-                        <dt class="col-5 text-dark">Адрес</dt>
+                        <dt class="col-5 text-dark" id="current_address">Адрес</dt>
                         <dd class="col-7 text-dark">
                             {{ contact.current_address | default('Не указан', true) }}
                         </dd>
@@ -66,7 +66,7 @@
 
                     <div class="d-flex justify-content-between mt-4">
                         <form action="{{ url_for('contacts_edit', id=contact.id) }}" method="get">
-                            <button type="submit" class="btn bg-white text-dark border border-dark">
+                            <button type="submit" id="edit" class="btn bg-white text-dark border border-dark">
                                 Редактировать
                             </button>
                         </form>
