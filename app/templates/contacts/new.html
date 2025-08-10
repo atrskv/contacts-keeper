@@ -13,9 +13,13 @@
                 <div class="card-body">
                     <form action="{{ url_for('contacts_post') }}" method="post">
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark">Имя<span class="text-danger">*</span></dt>
-                            <dd class="col-7" id="first_name">
-                                <input type="text" class="form-control{% if errors.first_name %} is-invalid{% endif %}" name="first_name" value="{{ form_data.first_name | default('', true) }}">
+                            <dt class="col-5 text-dark">
+                                <label for="first_name">Имя<span class="text-danger">*</span></label>
+                            </dt>
+                            <dd class="col-7">
+                                <input type="text" id="first_name"
+                                    class="form-control{% if errors.first_name %} is-invalid{% endif %}"
+                                    name="first_name" value="{{ form_data.first_name | default('', true) }}">
                                 {% if errors.first_name %}
                                 <div class="invalid-feedback">{{ errors.first_name }}</div>
                                 {% endif %}
@@ -23,9 +27,13 @@
                         </div>
 
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark">Фамилия</dt>
+                            <dt class="col-5 text-dark">
+                                <label for="last_name">Фамилия</label>
+                            </dt>
                             <dd class="col-7">
-                                <input type="text" id="last_name" class="form-control{% if errors.last_name %} is-invalid{% endif %}" name="last_name" value="{{ form_data.last_name | default('', true) }}">
+                                <input type="text" id="last_name"
+                                    class="form-control{% if errors.last_name %} is-invalid{% endif %}" name="last_name"
+                                    value="{{ form_data.last_name | default('', true) }}">
                                 {% if errors.last_name %}
                                 <div class="invalid-feedback">{{ errors.last_name }}</div>
                                 {% endif %}
@@ -33,9 +41,13 @@
                         </div>
 
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark">Телефон</dt>
+                            <dt class="col-5 text-dark">
+                                <label for="phone">Телефон</label>
+                            </dt>
                             <dd class="col-7">
-                                <input type="tel" id="phone" class="form-control{% if errors.phone %} is-invalid{% endif %}" name="phone" value="{{ form_data.phone | default('', true) }}">
+                                <input type="tel" id="phone"
+                                    class="form-control{% if errors.phone %} is-invalid{% endif %}" name="phone"
+                                    value="{{ form_data.phone | default('', true) }}">
                                 {% if errors.phone %}
                                 <div class="invalid-feedback">{{ errors.phone }}</div>
                                 {% endif %}
@@ -43,9 +55,13 @@
                         </div>
 
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark" id="email">Эл. почта</dt>
+                            <dt class="col-5 text-dark">
+                                <label for="email">Эл. почта</label>
+                            </dt>
                             <dd class="col-7">
-                                <input type="email" class="form-control{% if errors.email %} is-invalid{% endif %}" name="email" value="{{ form_data.email | default('', true) }}">
+                                <input type="email" id="email"
+                                    class="form-control{% if errors.email %} is-invalid{% endif %}" name="email"
+                                    value="{{ form_data.email | default('', true) }}">
                                 {% if errors.email %}
                                 <div class="invalid-feedback">{{ errors.email }}</div>
                                 {% endif %}
@@ -54,18 +70,21 @@
 
                         {% set gender = form_data.gender | default('other', true) %}
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark" id="gender">Пол</dt>
+                            <dt class="col-5 text-dark">Пол</dt>
                             <dd class="col-7">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="gender_male" value="male" {% if gender == 'male' %}checked{% endif %}>
+                                    <input class="form-check-input" type="radio" name="gender" id="gender_male"
+                                        value="male" {% if gender=='male' %}checked{% endif %}>
                                     <label class="form-check-label" for="gender_male">Мужской</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="gender_female" value="female" {% if gender == 'female' %}checked{% endif %}>
+                                    <input class="form-check-input" type="radio" name="gender" id="gender_female"
+                                        value="female" {% if gender=='female' %}checked{% endif %}>
                                     <label class="form-check-label" for="gender_female">Женский</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="gender_other" value="other" {% if gender == 'other' %}checked{% endif %}>
+                                    <input class="form-check-input" type="radio" name="gender" id="gender_other"
+                                        value="other" {% if gender=='other' %}checked{% endif %}>
                                     <label class="form-check-label" for="gender_other">...</label>
                                 </div>
                                 {% if errors.gender %}
@@ -74,10 +93,14 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3" id="date_of_birth">
-                            <dt class="col-5 text-dark">Дата рождения</dt>
+                        <div class="row mb-3">
+                            <dt class="col-5 text-dark">
+                                <label for="date_of_birth">Дата рождения</label>
+                            </dt>
                             <dd class="col-7">
-                                <input type="date" class="form-control{% if errors.date_of_birth %} is-invalid{% endif %}" name="date_of_birth" value="{{ form_data.date_of_birth | default('', true) }}">
+                                <input id="date_of_birth" type="date"
+                                    class="form-control{% if errors.date_of_birth %} is-invalid{% endif %}"
+                                    name="date_of_birth" value="{{ form_data.date_of_birth | default('', true) }}">
                                 {% if errors.date_of_birth %}
                                 <div class="invalid-feedback">{{ errors.date_of_birth }}</div>
                                 {% endif %}
@@ -85,16 +108,18 @@
                         </div>
 
                         {% set priority = form_data.priority | default('regular', true) %}
-                        <div class="row mb-3" id="priority">
+                        <div class="row mb-3">
                             <dt class="col-5 text-dark">Приоритет</dt>
                             <dd class="col-7">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="priority" id="prio_regular" value="regular" {% if priority == 'regular' %}checked{% endif %}>
-                                    <label class="form-check-label" for="prio_regular">Обычный</label>
+                                    <input class="form-check-input" type="radio" name="priority" id="priority_regular"
+                                        value="regular" {% if priority=='regular' %}checked{% endif %}>
+                                    <label class="form-check-label" for="priority_regular">Обычный</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="priority" id="prio_high" value="high" {% if priority == 'high' %}checked{% endif %}>
-                                    <label class="form-check-label" for="prio_high">Особой важности</label>
+                                    <input class="form-check-input" type="radio" name="priority" id="priority_high"
+                                        value="high" {% if priority=='high' %}checked{% endif %}>
+                                    <label class="form-check-label" for="priority_high">Особой важности</label>
                                 </div>
                                 {% if errors.priority %}
                                 <div class="invalid-feedback">{{ errors.priority }}</div>
@@ -103,15 +128,18 @@
                         </div>
 
                         {% set category = form_data.category | default('not_selected', true) %}
-                        <div class="row mb-3" id="category">
-                            <dt class="col-5 text-dark">Категория</dt>
+                        <div class="row mb-3">
+                            <dt class="col-5 text-dark">
+                                <label for="category_select">Категория</label>
+                            </dt>
                             <dd class="col-7">
-                                <select class="form-select{% if errors.category %} is-invalid{% endif %}" name="category">
-                                    <option value="not_selected" {% if category == 'not_selected' %}selected{% endif %}>Не выбрана</option>
-                                    <option value="friends" {% if category == 'friends' %}selected{% endif %}>Друзья</option>
-                                    <option value="family" {% if category == 'family' %}selected{% endif %}>Семья</option>
-                                    <option value="work" {% if category == 'work' %}selected{% endif %}>Работа</option>
-                                    <option value="clients" {% if category == 'clients' %}selected{% endif %}>Клиенты</option>
+                                <select class="form-select{% if errors.category %} is-invalid{% endif %}"
+                                    name="category" id="category_select">
+                                    <option value="not_selected" {% if category=='not_selected' %}selected{% endif %}>Не выбрана</option>
+                                    <option value="friends" {% if category=='friends' %}selected{% endif %}>Друзья</option>
+                                    <option value="family" {% if category=='family' %}selected{% endif %}>Семья</option>
+                                    <option value="work" {% if category=='work' %}selected{% endif %}>Работа</option>
+                                    <option value="clients" {% if category=='clients' %}selected{% endif %}>Клиенты</option>
                                 </select>
                                 {% if errors.category %}
                                 <div class="invalid-feedback">{{ errors.category }}</div>
@@ -126,19 +154,19 @@
                         {% endif %}
 
                         <div class="row mb-3">
-                            <dt class="col-5 text-dark" id="channels">Каналы связи</dt>
+                            <dt class="col-5 text-dark">Каналы связи</dt>
                             <dd class="col-7">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="channels" value="can_call" id="can_call" {% if 'can_call' in channels %}checked{% endif %}>
+                                    <input class="form-check-input" type="checkbox" name="channels" id="can_call" value="can_call" {% if 'can_call' in channels %}checked{% endif %}>
                                     <label class="form-check-label" for="can_call">Можно звонить</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="channels" value="can_message" id="can_message" {% if 'can_message' in channels %}checked{% endif %}>
+                                    <input class="form-check-input" type="checkbox" name="channels" id="can_message" value="can_message" {% if 'can_message' in channels %}checked{% endif %}>
                                     <label class="form-check-label" for="can_message">Можно писать сообщения</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="channels" value="email_preferred" id="can_email" {% if 'email_preferred' in channels %}checked{% endif %}>
-                                    <label class="form-check-label" for="can_email">Предпочтительно по эл. почте</label>
+                                    <input class="form-check-input" type="checkbox" name="channels" id="email_preferred" value="email_preferred" {% if 'email_preferred' in channels %}checked{% endif %}>
+                                    <label class="form-check-label" for="email_preferred">Предпочтительно по эл. почте</label>
                                 </div>
                                 {% if errors.channels %}
                                 <div class="text-danger small mt-1">{{ errors.channels }}</div>
@@ -146,10 +174,15 @@
                             </dd>
                         </div>
 
-                        <div class="row mb-3" id="current_address">
-                            <dt class="col-5 text-dark">Адрес</dt>
+                        <div class="row mb-3">
+                            <dt class="col-5 text-dark">
+                                <label for="current_address">Адрес</label>
+                            </dt>
                             <dd class="col-7">
-                                <textarea class="form-control{% if errors.current_address %} is-invalid{% endif %}" name="current_address" rows="3">{{ form_data.current_address | default('', true) }}</textarea>
+                                <textarea id="current_address"
+                                    class="form-control{% if errors.current_address %} is-invalid{% endif %}"
+                                    name="current_address"
+                                    rows="3">{{ form_data.current_address | default('', true) }}</textarea>
                                 {% if errors.current_address %}
                                 <div class="invalid-feedback">{{ errors.current_address }}</div>
                                 {% endif %}
@@ -157,7 +190,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" id="add" class="btn bg-white text-dark border border-dark">
+                            <button id="confirm" type="submit" class="btn bg-white text-dark border border-dark">
                                 Добавить
                             </button>
                         </div>

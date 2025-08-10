@@ -10,20 +10,20 @@
     <form action="{{ url_for('contacts_index') }}" method="get">
         <div class="input-group mb-3">
             <input type="search" id="search-input" name="query" value="{{ search }}" class="form-control" placeholder="{{ search_placeholder }}" aria-label="Search">
-            <button type="submit" name="action" id="search_button" value="search" class="btn bg-white text-dark border border-dark">
+            <button type="submit" name="action" id="search_btn" value="search" class="btn bg-white text-dark border border-dark">
                 Найти
             </button>
-            <button type="submit" name="action" id="reset_button" value="reset" class="btn bg-white text-dark border border-dark">
+            <button type="submit" name="action" id="reset_btn" value="reset" class="btn bg-white text-dark border border-dark">
                 Сбросить
             </button>
-            <a href="{{ url_for('contacts_new') }}" id="add_button" class="btn bg-white text-dark border border-dark">
+            <a href="{{ url_for('contacts_new') }}" id="add_contacts_btn" class="btn bg-white text-dark border border-dark">
                 Добавить
             </a>
         </div>
     </form>
 </div>
 
-<div class="contacts-list text-center">
+<div class="contacts-list text-center" id="contacts">
     {% if contacts %}
     {% for contact in contacts %}
     <div class="contact-item my-2">

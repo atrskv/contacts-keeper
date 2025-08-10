@@ -9,10 +9,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-12 mt-3">
 
-            <div class="card border border-dark bg-white shadow-sm mb-3" id="viewCard">
+            <div class="card border border-dark bg-white shadow-sm mb-3" id="view_card">
 
                 <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom border-dark">
-                    <h2 class="mb-0 text-dark">
+                    <h2 class="mb-0 text-dark" id="full_name">
                         {{ contact.first_name|default('', true) }} {{ contact.last_name|default('', true) }}
                     </h2>
                     <a href="{{ url_for('contacts_index') }}" class="btn-close btn-close-black" aria-label="Close"></a>
@@ -46,8 +46,8 @@
                             {{ contact.category.value if contact.category else 'Не выбрана' }}
                         </dd>
 
-                        <dt class="col-5 text-dark" id="channels">Каналы связи</dt>
-                        <dd class="col-7 text-dark">
+                        <dt class="col-5 text-dark">Каналы связи</dt>
+                        <dd class="col-7 text-dark" id="channels">
                             {% set channels = contact.channels|default([], true) %}
                             {% if channels %}
                             {% for ch in channels %}
@@ -58,8 +58,8 @@
                             {% endif %}
                         </dd>
 
-                        <dt class="col-5 text-dark" id="current_address">Адрес</dt>
-                        <dd class="col-7 text-dark">
+                        <dt class="col-5 text-dark">Адрес</dt>
+                        <dd class="col-7 text-dark" id="current_address">
                             {{ contact.current_address | default('Не указан', true) }}
                         </dd>
                     </dl>
@@ -71,14 +71,14 @@
                             </button>
                         </form>
 
-                        <button type="button" id="showDeleteConfirm" class="btn bg-white text-dark border border-dark">
+                        <button type="button" id="show_delete_confirm" class="btn bg-white text-dark border border-dark">
                             Удалить
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="card border border-dark bg-white shadow-sm" id="deleteConfirmCard">
+            <div class="card border border-dark bg-white shadow-sm" id="delete_confirm_card" style="display: none;"</div>
                 <div class="card-header bg-white border-bottom border-dark">
                     <h2 class="mb-0">Подтверждение удаления</h2>
                 </div>
@@ -93,14 +93,14 @@
                         <button type="submit" class="btn bg-white text-dark border border-dark">
                             Да, удалить
                         </button>
-                        <button id="cancelDeleteConfirm" type="button" class="btn bg-white text-dark border border-dark">
+                        <button id="cancel_delete" type="button" class="btn bg-white text-dark border border-dark">
                             Отмена
                         </button>
                     </form>
                 </div>
             </div>
 
-            <div class="flashes text-center {% if messages %}show{% endif %}">
+            <div id="message" class="flashes text-center {% if messages %}show{% endif %}">
                 {% for category, message in messages %}
                 <div class="alert alert-success success py-1 px-2 d-inline-block small mb-4 text-white fade show" role="alert" style="max-width: 300px;">
                     {{ message }}
@@ -113,14 +113,14 @@
 </div>
 
 <script>
-    document.getElementById('showDeleteConfirm').addEventListener('click', function() {
-        document.getElementById('viewCard').style.display = 'none';
-        document.getElementById('deleteConfirmCard').style.display = 'block';
+    document.getElementById('show_delete_confirm').addEventListener('click', function() {
+        document.getElementById('view_card').style.display = 'none';
+        document.getElementById('delete_confirm_card').style.display = 'block';
     });
 
-    document.getElementById('cancelDeleteConfirm').addEventListener('click', function(event) {
-        document.getElementById('deleteConfirmCard').style.display = 'none';
-        document.getElementById('viewCard').style.display = 'block';
+    document.getElementById('cancel_delete').addEventListener('click', function(event) {
+        document.getElementById('delete_confirm_card').style.display = 'none';
+        document.getElementById('view_card').style.display = 'block';
     });
 </script>
 
