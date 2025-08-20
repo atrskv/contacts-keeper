@@ -254,17 +254,17 @@ class ContactsRepository:
                 return contact
         return None
 
-    def find_by_name_or_last_name(self, query: str) -> list[Contact]:
+    def find_by_name_or_last_name(self, query: str):
         contacts = self.read()
         found_contacts = []
+        query_lower = query.strip().lower()
 
-        query_lower = query.lower()
         for contact in contacts:
-            if (
-                contact.first_name
-                and query_lower in contact.first_name.lower()
-            ) or (
-                contact.last_name and query_lower in contact.last_name.lower()
+            first_name = (contact.first_name or '').strip().lower()
+            last_name = (contact.last_name or '').strip().lower()
+
+            if first_name.startswith(query_lower) or last_name.startswith(
+                query_lower
             ):
                 found_contacts.append(contact)
 
