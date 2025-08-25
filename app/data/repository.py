@@ -6,7 +6,7 @@ from datetime import date
 from faker import Faker
 from werkzeug.datastructures import ImmutableMultiDict
 
-from app.common import str_to_date
+from app.common import str_to_date, unique_suffix
 from app.data.enums import Category, Channel, Gender, Priority
 
 fake = Faker(locale='ru_RU')
@@ -40,6 +40,24 @@ class Contact:
             category=None,
             channels=None,
             current_address=None,
+        )
+
+    @classmethod
+    def random(cls) -> 'Contact':
+        return cls(
+            id=None,
+            first_name=fake.first_name() + unique_suffix(),
+            last_name=fake.last_name() + unique_suffix(),
+            gender=random.choice(list(Gender)),
+            phone=fake.phone_number(),
+            email=fake.email(),
+            date_of_birth=fake.date_of_birth(),
+            priority=random.choice(list(Priority)),
+            category=random.choice(list(Category)),
+            channels=random.sample(
+                list(Channel), k=random.randint(1, len(Channel))
+            ),
+            current_address=fake.street_address(),
         )
 
     @classmethod
