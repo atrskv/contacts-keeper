@@ -9,3 +9,9 @@ dev-down:
 
 prod-down:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+
+docs-up:
+	docker-compose -f docker-compose.docs.yml up -d --build
+
+docs-down:
+	docker-compose -f docker-compose.docs.yml down

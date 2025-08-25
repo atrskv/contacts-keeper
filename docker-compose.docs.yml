@@ -1,0 +1,11 @@
+services:
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - ./CHANGELOG.md:/app/docs/changelog.md
+    ports:
+      - "8081:8000"

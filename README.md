@@ -52,8 +52,13 @@ make prod-up
 
 В случае запуска на `dev` приложение будет доступно по адресу: `http://localhost:8080/`, в случае `prod` — `http://localhost:80/`
 
+5. Запустить сервис документации:
 
-Документация в обоих случаях запуска будет доступна по адресу: `http://localhost:8081/`:
+```
+make docs-up
+```
+
+Доступ — `http://localhost:8081/`:
 
 <img src="docs/resources/docs.png" width="1000" height="1000" />
 

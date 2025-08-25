@@ -28,16 +28,5 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       SECRET_KEY: ${SECRET_KEY}
 
-  docs:
-    build:
-      context: .
-      dockerfile: Dockerfile.docs
-    working_dir: /app
-    volumes:
-      - ./:/app
-      - ./CHANGELOG.md:/app/docs/changelog.md
-    ports:
-      - "8081:8000"
-
 volumes:
   pgdata:
