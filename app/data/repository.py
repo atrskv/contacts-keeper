@@ -4,9 +4,8 @@ from dataclasses import dataclass
 from datetime import date
 
 from faker import Faker
-from werkzeug.datastructures import ImmutableMultiDict
 
-from app.common import str_to_date, unique_suffix
+from app.common import date_to_str, str_to_date, unique_suffix
 from app.data.enums import Category, Channel, Gender, Priority
 
 fake = Faker(locale='ru_RU')
@@ -61,12 +60,10 @@ class Contact:
         )
 
     @classmethod
-    def from_form_data(
-        cls, form_data: ImmutableMultiDict[str, str]
-    ) -> 'Contact':
-        data = form_data.to_dict()
-        channels_list = form_data.getlist('channels')
+    def from_json(cls, data: dict) -> 'Contact':
+        channels_list = data.get('channels', [])
 
+        # TODO: Refactor
         gender: Gender = (
             Gender[data['gender']]
             if data.get('gender') in Gender.__members__
@@ -87,11 +84,8 @@ class Contact:
 
         channels: list[Channel] = []
         for value in channels_list:
-            try:
-                if value in Channel.__members__:
-                    channels.append(Channel[value])
-            except KeyError:
-                continue
+            if value in Channel.__members__:
+                channels.append(Channel[value])
 
         return cls(
             first_name=data.get('first_name'),
@@ -105,6 +99,81 @@ class Contact:
             channels=channels,
             current_address=data.get('current_address'),
         )
+
+    @classmethod
+    def from_form_data(cls, form_data) -> 'Contact':
+        channels_list = (
+            form_data.getlist('channels')
+            if hasattr(form_data, 'getlist')
+            else form_data.get('channels', [])
+        )
+        if isinstance(channels_list, str):
+            channels_list = [
+                ch.strip() for ch in channels_list.split(',') if ch.strip()
+            ]
+
+        # TODO: Refactor
+        gender = (
+            Gender[form_data['gender']]
+            if form_data.get('gender') in Gender.__members__
+            else Gender.other
+        )
+
+        priority = (
+            Priority[form_data['priority']]
+            if form_data.get('priority') in Priority.__members__
+            else Priority.regular
+        )
+
+        category = (
+            Category[form_data['category']]
+            if form_data.get('category') in Category.__members__
+            else Category.not_selected
+        )
+
+        channels = [
+            Channel[ch] for ch in channels_list if ch in Channel.__members__
+        ]
+
+        date_str = form_data.get('date_of_birth')
+
+        if date_str:
+            try:
+                date_of_birth = str_to_date(date_str)
+            except ValueError:
+                date_of_birth = None
+
+        return cls(
+            first_name=form_data.get('first_name'),
+            last_name=form_data.get('last_name'),
+            gender=gender,
+            phone=form_data.get('phone'),
+            email=form_data.get('email'),
+            date_of_birth=date_of_birth,
+            priority=priority,
+            category=category,
+            channels=channels,
+            current_address=form_data.get('current_address'),
+        )
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'gender': self.gender.name if self.gender else None,
+            'phone': self.phone,
+            'email': self.email,
+            'date_of_birth': date_to_str(self.date_of_birth)
+            if self.date_of_birth
+            else None,
+            'priority': self.priority.name if self.priority else None,
+            'category': self.category.name if self.category else None,
+            'channels': [ch.name for ch in self.channels]
+            if self.channels
+            else [],
+            'current_address': self.current_address,
+        }
 
 
 class ContactsRepository:
@@ -142,7 +211,6 @@ class ContactsRepository:
                     ),
                 )
             self.conn.commit()
-            print('Inserted successfully')
         except Exception:
             self.conn.rollback()
             raise
@@ -160,8 +228,6 @@ class ContactsRepository:
             """)
             rows = cur.fetchall()
 
-        print('rows from DB:', rows)  # debug
-
         contacts = []
         for row in rows:
             (
@@ -178,8 +244,6 @@ class ContactsRepository:
                 current_address,
             ) = row
 
-            print('channels_list from DB:', channels_list)  # debug
-
             channels = []
             if channels_list:
                 for ch_str in channels_list:
@@ -187,7 +251,6 @@ class ContactsRepository:
                         channels.append(Channel[ch_str])
                     except KeyError:
                         print(f"Warning: unknown channel '{ch_str}' in DB")
-                        # можно пропустить или обработать
 
             contact = Contact(
                 id=id_,
@@ -205,6 +268,9 @@ class ContactsRepository:
             contacts.append(contact)
 
         return contacts
+
+    # TODO:
+    # Refactor update(self, id, first_name... -> update(self, contact: Contact)?
 
     def update(
         self,

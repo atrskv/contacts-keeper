@@ -1,17 +1,31 @@
-from flask.app import Flask
-from flask.cli import load_dotenv
 import os
-from app import routes
+from app.routes.api import init_api
+from app.routes.ui import init_ui
+from flask import Flask
+from flask.json.provider import DefaultJSONProvider
+from dotenv import load_dotenv
+
+class JSONProvider(DefaultJSONProvider):
+    def dumps(self, obj, **kwargs):
+        kwargs.setdefault('ensure_ascii', False)
+        return super().dumps(obj, **kwargs)
+
+    def loads(self, s, **kwargs):
+        return super().loads(s, **kwargs)
+
 
 _ = load_dotenv()
-
-
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.secret_key = os.getenv('SECRET_KEY')
-
-    routes.init_app(app)
+    
+    app.json_provider_class = JSONProvider
+    app.json = app.json_provider_class(app)
+    
+ 
+    init_ui(app)
+    init_api(app)
 
     return app

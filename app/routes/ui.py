@@ -1,10 +1,6 @@
-# pyright: reportUnusedFunction=false
-import os
 import random
 from datetime import datetime
 
-import psycopg2
-from dotenv import load_dotenv
 from flask import (
     Flask,
     abort,
@@ -17,32 +13,12 @@ from flask import (
 )
 
 from app.common import date_to_str
-from app.data.repository import Contact, ContactsRepository
+from app.data import repo
+from app.data.repository import Contact
 from app.validators import ContactValidator
 
-_ = load_dotenv()
 
-DB_HOST = os.getenv('DB_HOST')
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-
-
-def get_db_connection():
-    conn = psycopg2.connect(
-        host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD
-    )
-    return conn
-
-
-conn = get_db_connection()
-
-
-repo = ContactsRepository(conn)
-repo.generate_contacts_data(100)
-
-
-def init_app(app: Flask):
+def init_ui(app: Flask):
     ...
 
     @app.get('/')
@@ -60,6 +36,7 @@ def init_app(app: Flask):
         else:
             contacts = repo.find_by_name_or_last_name(query)
 
+        # TODO: Refactor
         contacts = sorted(
             contacts,
             key=lambda c: (

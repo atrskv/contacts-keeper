@@ -1,11 +1,9 @@
 import re
 
-from werkzeug.datastructures import ImmutableMultiDict
-
 
 class ContactValidator:
-    def __init__(self, data: ImmutableMultiDict[str, str]):
-        self.data: dict[str, str] = data.to_dict()
+    def __init__(self, data: dict):
+        self.data = data
         self.errors: dict[str, str] = {}
 
     def validate_first_name(self):
@@ -30,15 +28,12 @@ class ContactValidator:
         if phone:
             cleaned = re.sub(r'[ \-\(\)]', '', phone)
 
-            if cleaned.startswith('+'):
-                digits = cleaned[1:]
-            else:
-                digits = cleaned
+            digits = cleaned[1:] if cleaned.startswith('+') else cleaned
 
             if not digits.isdigit():
                 self.errors['phone'] = (
-                    'Телефон должен содержать только цифры'
-                    ' (после "+" разрешены пробелы, скобки и дефисы)'
+                    'Телефон должен содержать только цифры '
+                    '(после "+" разрешены пробелы, скобки и дефисы)'
                 )
 
     def validate(self) -> dict[str, str]:
