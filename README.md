@@ -9,26 +9,26 @@
 </h1>
 
 <p align="center">
-Минималистичное приложение для управления контактами
+A minimalist contact management application
 </p>
 
 <img src="docs/resources/index.png" width="1000" height="1000" />
 
-## Запуск
+## Getting Started
 
-1. Склонировать репозиторий:
+1. Clone the repository:
 
 ```
 git clone https://github.com/atrskv/contacts-keeper.git
 ```
 
-2. Установить зависимости:
+2. Install dependencies:
 
 ```
 uv sync
 ```
 
-3. Подготовить `.env` файлы:
+3. Prepare the .env files:
 
 ```
 cp .env.example.dev .env.dev
@@ -38,30 +38,36 @@ cp .env.example.dev .env.dev
 cp .env.example.prod .env.prod
 ```
 
-4. Запустить приложение:
+4. Run the application:
 
 ```
 make dev-up
 ```
 
-Или:
+Or for production:
 
 ```
 make prod-up
 ```
 
-В случае запуска на `dev` приложение будет доступно по адресу: `http://localhost:8080/`, в случае `prod` — `http://localhost:80/`
+When running in dev mode, the app will be available at: `http://localhost:8080/`
 
-5. Запустить сервис документации:
+In prod mode: `http://localhost:80/`
+
+The project includes API documentation. Once the app is running, you can access it at: `http://localhost:8080/apidocs/`
+
+<img src="docs/resources/api-docs.png" width="1000" height="1000" />
+
+
+5. To launch the documentation *(built with [mkdocs-material](https://squidfunk.github.io/mkdocs-material/))*:
 
 ```
 make docs-up
 ```
 
-Доступ — `http://localhost:8081/`:
+Available at: `http://localhost:8081/`
 
 <img src="docs/resources/docs.png" width="1000" height="1000" />
-
 
 
 

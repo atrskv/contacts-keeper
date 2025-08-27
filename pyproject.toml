@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "faker>=37.4.0",
+    "flasgger>=0.9.7.1",
     "flask>=3.1.1",
     "gunicorn>=23.0.0",
     "mkdocs-material>=9.6.16",
