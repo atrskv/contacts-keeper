@@ -50,16 +50,14 @@ Or for production:
 make prod-up
 ```
 
-When running in dev mode, the app will be available at: http://localhost:8080/
-
-In prod mode: `http://localhost:80/`
+When running, the app will be available at: `http://localhost:8080/`
 
 The project includes API documentation. Once the app is running, you can access it at: `http://localhost:8080/apidocs/`
 
 <img src="docs/resources/api-docs.png" width="1000" height="1000" />
 
 
-5. To launch the documentation *(built with [MkDocs](https://squidfunk.github.io/mkdocs-material/))*:
+5. To launch the documentation *(built with [mkdocs-material](https://squidfunk.github.io/mkdocs-material/))*:
 
 ```
 make docs-up
