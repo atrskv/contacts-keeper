@@ -1,4 +1,5 @@
 import os
+from app.data import generate_initial_data
 from app.routes.api import init_api
 from app.routes.ui import init_ui
 from flask import Flask
@@ -27,5 +28,7 @@ def create_app() -> Flask:
  
     init_ui(app)
     init_api(app)
+    
+    generate_initial_data() 
 
     return app

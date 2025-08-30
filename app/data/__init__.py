@@ -10,13 +10,15 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 
 def get_db_connection():
-    conn = psycopg2.connect(
+    return psycopg2.connect(
         host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD
     )
-    return conn
 
+def get_repo():
+    conn = get_db_connection()
+    repo = ContactsRepository(conn)
+    return repo
 
-conn = get_db_connection()
-
-repo = ContactsRepository(conn)
-repo.generate_contacts_data(100)
+def generate_initial_data():
+    repo = get_repo()
+    repo.generate_contacts_data(100)
