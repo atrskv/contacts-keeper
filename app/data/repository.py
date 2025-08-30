@@ -135,6 +135,7 @@ class Contact:
             Channel[ch] for ch in channels_list if ch in Channel.__members__
         ]
 
+        date_of_birth = None
         date_str = form_data.get('date_of_birth')
 
         if date_str:
