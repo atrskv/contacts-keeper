@@ -177,6 +177,14 @@ class Contact:
         }
 
 
+@dataclass
+class ContactsPage:
+    contacts: list[Contact]
+    page: int
+    pages: int
+    total: int
+
+
 class ContactsRepository:
     def __init__(self, conn):
         self.conn = conn

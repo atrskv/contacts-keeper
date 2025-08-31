@@ -16,8 +16,10 @@ def str_to_date(date_: str | None) -> date | None:
     return None
 
 
-def date_to_str(date_: date) -> str:
-    return date_.strftime(formats[2]) if date_ else ''
+def date_to_str(date_: date | None) -> str | None:
+    if date_ is not None:
+        return date_.strftime(formats[2]) if date_ else ''
+    return None
 
 
 def unique_suffix() -> str:

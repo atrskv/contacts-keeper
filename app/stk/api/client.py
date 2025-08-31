@@ -99,30 +99,52 @@ class ApiClient:
         logger.info('-' * 100 + '\n')
 
         self._logging_pre(
-            method, url, headers, data or json_data, files, expect_status
-        )
-        response = self.session.request(
             method,
             url,
-            headers=headers,
-            params=params,
-            data=data,
-            json=json_data,
-            files=files,
+            headers,
+            data or json_data,
+            files,
+            expect_status,
         )
+
+        try:
+            response = self.session.request(
+                method,
+                url,
+                headers=headers,
+                params=params,
+                data=data,
+                json=json_data,
+                files=files,
+            )
+        except RequestException as e:
+            logger.error(f'Request failed: {e}')
+            raise
 
         self._logging_post(response)
 
         if check_status:
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except HTTPError as e:
+                logger.error(f'HTTP error occurred: {e}')
+                logger.error(f'Response content: {response.text}')
+                raise
 
         if expect_status and response.status_code != expect_status:
-            raise RequestFailureException(
-                f'Request {url} failed with [{response.status_code}]: {response.text}'
-            )
+            error_msg = f'Request {url} failed with [{response.status_code}]: {response.text}'
+            logger.error(error_msg)
+            raise RequestFailureException(error_msg)
 
-        if jsonify:
-            return response.json()
+        if check_schema and jsonify:
+            try:
+                response_data = response.json()
+                validated_response = check_schema(**response_data)
+                return validated_response
+            except (TypeError, ValueError) as e:
+                logger.error(f'Dataclass validation failed: {e}')
+                logger.error(f'Response data: {response_data}')
+                raise
 
         return response
 
