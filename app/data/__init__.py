@@ -19,6 +19,5 @@ def get_repo():
     repo = ContactsRepository(conn)
     return repo
 
-def generate_initial_data():
-    repo = get_repo()
+def generate_initial_data(repo):
     repo.generate_contacts_data(100)

@@ -3,12 +3,11 @@ import random
 from flasgger import Swagger
 from flask import jsonify, request
 
-from app.data import get_repo
 from app.data.repository import Contact
 from app.validators import ContactValidator
 
 
-def init_api(app):
+def init_api(app, repo):
     app.config['SWAGGER'] = {'title': 'Contacts Keeper'}
 
     template = {
@@ -120,8 +119,6 @@ def init_api(app):
         query = request.args.get('query', '')
         page = request.args.get('page', 1, type=int)
 
-        repo = get_repo()
-
         if query:
             contacts = repo.find_by_name_or_last_name(query)
         else:
@@ -171,8 +168,6 @@ def init_api(app):
             description: Contact not found
         """
 
-        repo = get_repo()
-
         contact = repo.find_by_id(id)
         if not contact:
             return jsonify({'error': 'Contact not found'}), 404
@@ -189,8 +184,6 @@ def init_api(app):
           200:
             description: A random contact
         """
-
-        repo = get_repo()
 
         contact = random.choice(repo.read())
 
@@ -232,8 +225,6 @@ def init_api(app):
 
         contact = Contact.from_json(data)
 
-        repo = get_repo()
-
         repo.create(contact)
 
         return jsonify({'id': contact.id, **contact.to_dict()}), 201
@@ -269,8 +260,6 @@ def init_api(app):
             description: Validation errors
         """
 
-        repo = get_repo()
-
         contact = repo.find_by_id(id)
         if not contact:
             return jsonify({'error': 'Contact not found'}), 404
@@ -286,8 +275,6 @@ def init_api(app):
 
         updated_contact = Contact.from_json(data)
         updated_contact.id = id
-
-        repo = get_repo()
 
         repo.update(
             id=id,
@@ -322,8 +309,6 @@ def init_api(app):
           404:
             description: Contact not found
         """
-
-        repo = get_repo()
 
         contact = repo.find_by_id(id)
         if not contact:

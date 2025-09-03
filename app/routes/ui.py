@@ -13,12 +13,11 @@ from flask import (
 )
 
 from app.common import date_to_str
-from app.data import get_repo
 from app.data.repository import Contact
 from app.validators import ContactValidator
 
 
-def init_ui(app: Flask):
+def init_ui(app: Flask, repo):
     ...
 
     @app.get('/')
@@ -28,8 +27,6 @@ def init_ui(app: Flask):
         query = request.args.get('query', '')
         messages = get_flashed_messages(with_categories=True)
         page = request.args.get('page', 1, type=int)
-
-        repo = get_repo()
 
         if action == 'reset':
             contacts = repo.read()
@@ -79,8 +76,6 @@ def init_ui(app: Flask):
 
     @app.route('/contacts/<id>/')
     def contacts_show(id: str):
-        repo = get_repo()
-
         contact = repo.find_by_id(id)
         messages = get_flashed_messages(with_categories=True)
 
@@ -96,8 +91,6 @@ def init_ui(app: Flask):
 
     @app.route('/contacts/random/')
     def contacts_random_show():
-        repo = get_repo()
-
         contact = random.choice(repo.read())
 
         return render_template(
@@ -126,8 +119,6 @@ def init_ui(app: Flask):
                 errors=errors,
             ), 422
 
-        repo = get_repo()
-
         repo.create(contact)
 
         flash('Контакт добавлен', 'success')
@@ -136,8 +127,6 @@ def init_ui(app: Flask):
 
     @app.route('/contacts/<id>/edit/')
     def contacts_edit(id: str):
-        repo = get_repo()
-
         contact = repo.find_by_id(id)
 
         if not contact:
@@ -154,8 +143,6 @@ def init_ui(app: Flask):
         form_data = request.form
         validator = ContactValidator(form_data)
         errors = validator.validate()
-
-        repo = get_repo()
 
         contact = repo.find_by_id(id)
 
@@ -193,8 +180,6 @@ def init_ui(app: Flask):
 
     @app.post('/contacts/<id>/delete/')
     def contacts_delete(id: str):
-        repo = get_repo()
-
         repo.delete(id)
 
         flash('Контакт удален', 'success')

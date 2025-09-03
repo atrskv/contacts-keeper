@@ -1,5 +1,5 @@
 import os
-from app.data import generate_initial_data
+from app.data import generate_initial_data, get_repo
 from app.routes.api import init_api
 from app.routes.ui import init_ui
 from flask import Flask
@@ -25,10 +25,10 @@ def create_app() -> Flask:
     app.json_provider_class = JSONProvider
     app.json = app.json_provider_class(app)
     
- 
-    init_ui(app)
-    init_api(app)
+    repo = get_repo()
+    init_ui(app, repo)
+    init_api(app, repo)
     
-    generate_initial_data() 
+    generate_initial_data(repo) 
 
     return app
