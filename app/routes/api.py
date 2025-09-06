@@ -229,7 +229,7 @@ def init_api(app, repo):
 
         return jsonify({'id': contact.id, **contact.to_dict()}), 201
 
-    @app.put('/api/contacts/<id>/')
+    @app.post('/api/contacts/<id>/')
     def api_contacts_update(id):
         """
         Update a contact by id
