@@ -23,7 +23,7 @@ class ContactValidator:
             )
 
     def validate_phone(self):
-        phone = self.data.get('phone', '').strip()
+        phone = (self.data.get('phone') or '').strip()
 
         if phone:
             cleaned = re.sub(r'[ \-\(\)]', '', phone)

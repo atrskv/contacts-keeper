@@ -26,9 +26,10 @@ def create_app() -> Flask:
     app.json = app.json_provider_class(app)
     
     repo = get_repo()
+    generate_initial_data(repo) 
+
     init_ui(app, repo)
     init_api(app, repo)
     
-    generate_initial_data(repo) 
 
     return app
