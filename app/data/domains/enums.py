@@ -5,6 +5,7 @@ class Gender(Enum):
     male = 'Мужчина'
     female = 'Женщина'
     other = '...'
+    hui = 'hui'
 
 
 class Priority(Enum):

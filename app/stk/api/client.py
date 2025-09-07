@@ -1,10 +1,11 @@
 import json
 import logging
 from json import JSONDecodeError
+from typing import Any
 
 import allure
 import requests
-from requests import HTTPError, RequestException
+from requests import RequestException
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -18,54 +19,54 @@ from app.common import is_json_serializable
 logger = logging.getLogger('test')
 
 
-class RequestFailureException(HTTPError, AssertionError):
+class UnexpectedStatusCodeException(Exception):
+    pass
+
+
+class ResponseValidationException(Exception):
     pass
 
 
 class ApiClient:
-    def __init__(self, base_url):
-        self.base_url = base_url
+    def __init__(self, host):
+        self.host = host
         self.session = requests.Session()
 
     @staticmethod
-    def _logging_pre(method, url, headers, data, files, expected_status):
+    def _logging_pre(method, url, headers, data, files, expected_status_code):
         if data is not None and is_json_serializable(data):
             data = json.dumps(data, indent=4, ensure_ascii=False)
 
-        if headers is not None and is_json_serializable(headers):
-            headers = json.dumps(dict(headers), indent=4, ensure_ascii=False)
+        if headers is not None:
+            headers = dict(headers)
+            if is_json_serializable(headers):
+                headers = json.dumps(headers, indent=4, ensure_ascii=False)
 
         text = (
-            f'Performing {method} request:\n'
+            f'method: {method}\n'
             f'url: {url}\n'
             f'headers: {headers}\n'
             f'data: {data}\n\n'
             f'files: {files}\n\n'
-            f'expected status: {expected_status}\n\n'
+            f'expected status: {expected_status_code}\n\n'
         )
 
-        allure.attach(
-            text, 'request', attachment_type=allure.attachment_type.TEXT
-        )
-
+        allure.attach(text, 'request', allure.attachment_type.TEXT)
         logger.info(text)
 
     @staticmethod
     def _logging_post(response):
         try:
-            data = json.dumps(response.json(), indent=4)
+            data = json.dumps(response.json(), indent=4, ensure_ascii=False)
         except JSONDecodeError:
             data = response.text
 
         text = (
-            'Got response:\n'
             f'response status: {response.status_code}\n'
-            f'response content: {data}\n\n'
+            f'response data: {data}\n\n'
         )
 
-        allure.attach(
-            text, 'response', attachment_type=allure.attachment_type.TEXT
-        )
+        allure.attach(text, 'response', allure.attachment_type.TEXT)
         logger.info(text)
 
     @retry(
@@ -89,22 +90,18 @@ class ApiClient:
         data=None,
         json_data=None,
         files=None,
-        check_schema=None,
-        check_status=True,
-        expect_status=200,
-        jsonify=True,
-    ):
-        url = self.base_url + location
+        expected_status_code=None,
+        expected_schema=None,
+        expected_error_schema=None,
+    ) -> Any:
+        url = self.host + location
 
         logger.info('-' * 100 + '\n')
 
+        payload = data if data is not None else json_data
+
         self._logging_pre(
-            method,
-            url,
-            headers,
-            data or json_data,
-            files,
-            expect_status,
+            method, url, headers, payload, files, expected_status_code
         )
 
         try:
@@ -123,47 +120,126 @@ class ApiClient:
 
         self._logging_post(response)
 
-        if check_status:
-            try:
-                response.raise_for_status()
-            except HTTPError as e:
-                logger.error(f'HTTP error occurred: {e}')
-                logger.error(f'Response content: {response.text}')
-                raise
+        # TODO: Create staticmethod valdiate()
+        if (
+            expected_status_code is not None
+            and response.status_code != expected_status_code
+        ):
+            if 400 <= response.status_code < 600 and expected_error_schema:
+                try:
+                    response_data = response.json()
+                    validated_error = expected_error_schema.model_validate(
+                        response_data
+                    )
+                    return validated_error
+                except (JSONDecodeError, ValueError) as e:
+                    logger.error(f'Error validation failed: {e}')
+                    raise ResponseValidationException(
+                        f'Error response validation failed: {e}'
+                    )
 
-        if expect_status and response.status_code != expect_status:
-            error_msg = f'Request {url} failed with [{response.status_code}]: {response.text}'
+            error_msg = f'Unexpected status code [{response.status_code}], expected {expected_status_code}: {response.text}'
+
             logger.error(error_msg)
-            raise RequestFailureException(error_msg)
 
-        if check_schema and jsonify:
+            raise UnexpectedStatusCodeException(error_msg)
+
+        if 400 <= response.status_code < 600:
+            if expected_error_schema:
+                try:
+                    response_data = response.json()
+                    validated_error = expected_error_schema.model_validate(
+                        response_data
+                    )
+                    return validated_error
+                except (JSONDecodeError, ValueError) as e:
+                    logger.error(f'Error validation failed: {e}')
+                    raise ResponseValidationException(
+                        f'Error response validation failed: {e}'
+                    )
+
+            return response
+
+        if expected_schema:
             try:
                 response_data = response.json()
-                validated_response = check_schema(**response_data)
+                validated_response = expected_schema.model_validate(
+                    response_data
+                )
                 return validated_response
-            except (TypeError, ValueError) as e:
-                logger.error(f'Dataclass validation failed: {e}')
-                logger.error(f'Response data: {response_data}')
-                raise
+            except (JSONDecodeError, ValueError, TypeError) as e:
+                logger.error(f'Validation failed: {e}')
+                logger.error(f'Response data: {response.text}')
+                raise ResponseValidationException(
+                    f'Error response validation failed: {e}'
+                )
 
         return response
 
-    def get(self, endpoint, expected_status=200, **kwargs):
+    def _get(
+        self,
+        endpoint,
+        expected_status_code=200,
+        expected_schema=None,
+        expected_error_schema=None,
+        **kwargs,
+    ):
         return self._request(
-            'GET', endpoint, expect_status=expected_status, **kwargs
+            'GET',
+            endpoint,
+            expected_status_code=expected_status_code,
+            expected_schema=expected_schema,
+            expected_error_schema=expected_error_schema,
+            **kwargs,
         )
 
-    def post(self, endpoint, expected_status=201, **kwargs):
+    def _post(
+        self,
+        endpoint,
+        expected_status_code=201,
+        expected_schema=None,
+        expected_error_schema=None,
+        **kwargs,
+    ):
         return self._request(
-            'POST', endpoint, expect_status=expected_status, **kwargs
+            'POST',
+            endpoint,
+            expected_status_code=expected_status_code,
+            expected_schema=expected_schema,
+            expected_error_schema=expected_error_schema,
+            **kwargs,
         )
 
-    def put(self, endpoint, expected_status=200, **kwargs):
+    def _put(
+        self,
+        endpoint,
+        expected_status_code=200,
+        expected_schema=None,
+        expected_error_schema=None,
+        **kwargs,
+    ):
         return self._request(
-            'PUT', endpoint, expect_status=expected_status, **kwargs
+            'POST',
+            endpoint,
+            expected_status_code=expected_status_code,
+            expected_schema=expected_schema,
+            expected_error_schema=expected_error_schema,
+            **kwargs,
         )
 
-    def delete(self, endpoint, expected_status=204, **kwargs):
+    def _delete(
+        self,
+        endpoint,
+        expected_status_code=204,
+        expected_schema=None,
+        expected_error_schema=None,
+        **kwargs,
+    ):
         return self._request(
-            'DELETE', endpoint, expect_status=expected_status, **kwargs
+            'DELETE',
+            endpoint,
+            expected_status_code=expected_status_code,
+            expected_schema=expected_schema,
+            expected_error_schema=expected_error_schema,
+            **kwargs,
         )

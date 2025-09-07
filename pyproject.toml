@@ -11,6 +11,7 @@ dependencies = [
     "gunicorn>=23.0.0",
     "mkdocs-material>=9.6.16",
     "psycopg2>=2.9.10",
+    "pydantic>=2.11.7",
     "python-dotenv>=1.1.1",
 ]
 
@@ -54,6 +55,16 @@ warn_return_any = false
 warn_unused_ignores = true
 allow_untyped_globals = true
 pretty = true
+
+[tool.pytest.ini_options]
+markers = [
+    "smoke: marks tests as smoke tests (run basic functionality)",
+    "critical_path: marks tests that cover the critical user paths",
+    "extended: marks extended or additional test cases",
+    
+    "ui: marks UI tests (frontend interaction tests)",
+    "api: marks UI tests (backend interaction tests)"
+]
 
 [tool.ruff]
 exclude = [
